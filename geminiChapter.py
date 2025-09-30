@@ -7,6 +7,27 @@ import json
 import time
 from concurrent.futures import ThreadPoolExecutor
 
+import hashlib
+
+def check_password():
+    """Returns True if the user had the correct password."""
+    
+    def password_entered():
+        """Checks whether a password entered by the user is correct."""
+        if hashlib.sha256(st.session_state["password"].encode()).hexdigest() == st.secrets["password_hash"]:
+            st.session_state["password_correct"] = True
+            del st.session_state["password"]
+        else:
+            st.session_state["password_correct"] = False
+
+    if st.session_state.get("password_correct", False):
+        return True
+
+    st.text_input("Password", type="password", on_change=password_entered, key="password")
+    if "password_correct" in st.session_state:
+        st.error("Password incorrect")
+    return False
+
 # --- CONFIGURATION & CONSTANTS ---
 
 # Set Streamlit page configuration
@@ -1380,7 +1401,13 @@ def render_stage_5():
 # --- MAIN APPLICATION LOGIC ---
 
 def main():
-    """Main function to run the Streamlit app."""
+    # """Main function to run the Streamlit app."""
+    # st.title("Wordware Ebook Generation Pipeline")
+    
+    # Password protection - ADD THESE 3 LINES
+    if not check_password():
+        st.stop()
+    
     st.title("Wordware Ebook Generation Pipeline")
     st.markdown("Follow the stages in the sidebar to transform your source documents into a complete ebook.")
 
