@@ -540,10 +540,17 @@ def render_stage_3():
             st.error("Failed to generate ebook skeleton.")
         st.rerun()
 
+    # if st.session_state.stage_3_status == 'completed':
+    #     st.success("✅ Stage 3 is complete. You can now proceed to Stage 4.")
+    #     with st.expander("View Generated Ebook Skeleton", expanded=True):
+    #         st.json(st.session_state.skeleton)
+    #     st.info(f"The skeleton defines {len(st.session_state.chapter_sequence)} chapters to be generated.")
     if st.session_state.stage_3_status == 'completed':
         st.success("✅ Stage 3 is complete. You can now proceed to Stage 4.")
         with st.expander("View Generated Ebook Skeleton", expanded=True):
-            st.json(st.session_state.skeleton)
+            # Show only EsqueletoMaestro instead of the full response
+            esqueleto_maestro = st.session_state.skeleton.get('EsqueletoMaestro', {})
+            st.json(esqueleto_maestro)
         st.info(f"The skeleton defines {len(st.session_state.chapter_sequence)} chapters to be generated.")
 
 
